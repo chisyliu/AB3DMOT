@@ -1,7 +1,11 @@
+# Author: Xinshuo Weng
+# email: xinshuo.weng@gmail.com
+
 import os, numpy as np, sys, cv2
 from PIL import Image
-from utils import is_path_exists, mkdir_if_missing, load_list_from_folder, fileparts, random_colors
-from kitti_utils import read_label, compute_box_3d, draw_projected_box3d, Calibration
+from xinshuo_io import is_path_exists, mkdir_if_missing, load_list_from_folder, fileparts
+from xinshuo_visualization import random_colors
+from AB3DMOT_libs.kitti_utils import read_label, compute_box_3d, draw_projected_box3d, Calibration
 
 max_color = 30
 colors = random_colors(max_color)       # Generate random colors
@@ -67,19 +71,16 @@ def vis(result_sha, data_root, result_root):
 			count += 1
 
 if __name__ == "__main__":
-	if len(sys.argv)!=2:
-		print("Usage: python visualization.py result_sha(e.g., 3d_det_test)")
+	if len(sys.argv) != 2:
+		print('Usage: python visualization.py result_sha(e.g., pointrcnn_Car_test_thres)')
 		sys.exit(1)
 
 	result_root = './results'
 	result_sha = sys.argv[1]
-	if ('train' in result_sha) or ('val' in result_sha):
-		print("No image data is provided for train/val splits, please download the KITTI dataset")
-		sys.exit(1)
-	elif 'test' in result_sha:
-		data_root = './data/KITTI/resources'
+	if 'val' in result_sha: data_root = './data/KITTI/resources/training'
+	elif 'test' in result_sha: data_root = './data/KITTI/resources/testing'
 	else:
-		print("No image data is provided, please download the KITTI dataset")
+		print("wrong split!")
 		sys.exit(1)
 
 	vis(result_sha, data_root, result_root)
